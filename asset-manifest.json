@@ -1,16 +1,17 @@
 {
   "files": {
-    "main.css": "/ak-office-fitness/static/css/main.f5ffdb5c.css",
-    "main.js": "/ak-office-fitness/static/js/main.10f406de.js",
+    "main.css": "/ak-office-fitness/static/css/main.2666407b.css",
+    "main.js": "/ak-office-fitness/static/js/main.790caf57.js",
     "static/js/453.e51f5142.chunk.js": "/ak-office-fitness/static/js/453.e51f5142.chunk.js",
+    "static/media/main_hero_image.png": "/ak-office-fitness/static/media/main_hero_image.74a502e768c6039c210c.png",
     "static/media/ak_logo.png": "/ak-office-fitness/static/media/ak_logo.34045f56c5a533c70b0c.png",
     "index.html": "/ak-office-fitness/index.html",
-    "main.f5ffdb5c.css.map": "/ak-office-fitness/static/css/main.f5ffdb5c.css.map",
-    "main.10f406de.js.map": "/ak-office-fitness/static/js/main.10f406de.js.map",
+    "main.2666407b.css.map": "/ak-office-fitness/static/css/main.2666407b.css.map",
+    "main.790caf57.js.map": "/ak-office-fitness/static/js/main.790caf57.js.map",
     "453.e51f5142.chunk.js.map": "/ak-office-fitness/static/js/453.e51f5142.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f5ffdb5c.css",
-    "static/js/main.10f406de.js"
+    "static/css/main.2666407b.css",
+    "static/js/main.790caf57.js"
   ]
 }
