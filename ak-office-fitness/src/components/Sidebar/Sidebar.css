@@ -1,0 +1,61 @@
+/* Стилізація бічної панелі */
+.sidebar {
+    width: 300px; /* Фіксована ширина */
+    background-color: #0d0d0d; /* Чорний колір для панелі */
+    padding: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Секція Логотипу AK */
+.logo-section {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #f7d540; /* Жовта лінія під логотипом */
+}
+
+.logo-section h1 {
+    font-size: 36px;
+    color: #f7d540; /* Жовтий колір логотипу */
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Стилізація посилань (кнопок) */
+.sidebar-link {
+    display: flex;
+    justify-content: space-between; /* Розносить текст і іконку по краях */
+    align-items: center;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #fff; /* Білий текст за замовчуванням */
+    background-color: #2c2c2c; /* Темний колір кнопки */
+    margin-bottom: 5px; /* Невеликий відступ між кнопками */
+    border-left: 5px solid transparent; /* Місце для індикатора активності */
+    transition: background-color 0.2s, border-left-color 0.2s;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Ефект наведення курсору (hover) */
+.sidebar-link:hover,
+.sidebar-link.active { /* Приклад для активної сторінки */
+    background-color: #3d3d3d; 
+    border-left-color: #f7d540; /* Жовта смуга зліва */
+}
+
+.ak-logo-image {
+    width: 80px;  /* Приклад: Зробіть логотип шириною 80px */
+    height: auto; /* Зберігайте пропорції */
+    display: block; /* Важливо для центрування та усунення зайвих відступів */
+    margin: 0 auto; /* Центруємо зображення горизонтально */
+}
+
+/* Стилізація іконки AK (в кінці посилання) */
+.link-icon {
+    font-weight: bold;
+    color: #f7d540; /* Жовтий колір для AK */
+    font-size: 16px;
+}

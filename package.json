@@ -1,0 +1,15 @@
+{
+  "name": "ak-office-fitness",
+  "version": "0.1.0",
+  "homepage": "https://dmytroprogs.github.io/ak-office-fitness", 
+  
+  "private": true,
+  "dependencies": {
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  }
+}

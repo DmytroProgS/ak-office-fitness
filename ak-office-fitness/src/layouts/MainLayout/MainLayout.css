@@ -1,0 +1,21 @@
+/* Встановлюємо чорний фон для всього тіла */
+body {
+    background-color: #1a1a1a; /* Дуже темно-сірий, майже чорний */
+    color: #f7d540; /* Золотисто-жовтий текст */
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Контейнер для макета: Flexbox, щоб розмістити Sidebar ліворуч, а Content - праворуч */
+.layout-container {
+    display: flex;
+    min-height: 100vh; /* Забезпечує, що макет займає всю висоту екрана */
+}
+
+/* Область для основного контенту (праворуч) */
+.content-area {
+    flex-grow: 1; /* Займає весь доступний простір */
+    padding: 20px;
+    background-color: #1a1a1a;
+    box-sizing: border-box;
+}
