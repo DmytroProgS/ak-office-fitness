@@ -1,3 +1,5 @@
+/* src/layouts/MainLayout/MainLayout.css */
+
 /* Встановлюємо чорний фон для всього тіла */
 body {
     background-color: #1a1a1a; /* Дуже темно-сірий, майже чорний */
@@ -5,17 +7,48 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
 }
-
 /* Контейнер для макета: Flexbox, щоб розмістити Sidebar ліворуч, а Content - праворуч */
 .layout-container {
     display: flex;
     min-height: 100vh; /* Забезпечує, що макет займає всю висоту екрана */
 }
-
 /* Область для основного контенту (праворуч) */
 .content-area {
     flex-grow: 1; /* Займає весь доступний простір */
     padding: 20px;
     background-color: #1a1a1a;
     box-sizing: border-box;
+}
+
+/* -------------------- НОВІ СТИЛІ ДЛЯ АУТЕНТИФІКАЦІЇ (якщо Sidebar використовує їх) -------------------- */
+
+.auth-status {
+    list-style: none;
+    padding: 10px 15px;
+    margin-top: 20px;
+    border-top: 1px solid #333;
+}
+
+.user-email {
+    display: block;
+    color: #ccc;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    word-wrap: break-word; 
+}
+
+.logout-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #f7d540; 
+    color: #1a1a1a;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+    background-color: #ffda6a; 
 }
