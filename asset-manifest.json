@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/ak-office-fitness/static/css/main.6a5e8d7b.css",
-    "main.js": "/ak-office-fitness/static/js/main.deda362b.js",
+    "main.js": "/ak-office-fitness/static/js/main.7c59eb44.js",
     "static/js/453.e51f5142.chunk.js": "/ak-office-fitness/static/js/453.e51f5142.chunk.js",
     "static/media/main_hero_image.png": "/ak-office-fitness/static/media/main_hero_image.74a502e768c6039c210c.png",
     "static/media/ak_logo.png": "/ak-office-fitness/static/media/ak_logo.34045f56c5a533c70b0c.png",
     "index.html": "/ak-office-fitness/index.html",
     "main.6a5e8d7b.css.map": "/ak-office-fitness/static/css/main.6a5e8d7b.css.map",
-    "main.deda362b.js.map": "/ak-office-fitness/static/js/main.deda362b.js.map",
+    "main.7c59eb44.js.map": "/ak-office-fitness/static/js/main.7c59eb44.js.map",
     "453.e51f5142.chunk.js.map": "/ak-office-fitness/static/js/453.e51f5142.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6a5e8d7b.css",
-    "static/js/main.deda362b.js"
+    "static/js/main.7c59eb44.js"
   ]
 }
