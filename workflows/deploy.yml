@@ -1,0 +1,37 @@
+# Файл: .github/workflows/deploy.yml
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Запускати при пуші в гілку main (або master)
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Використовуйте вашу версію Node.js
+
+      - name: Install dependencies 🏗️
+        run: npm install
+
+      - name: Set ENV variables and Build 🧱
+        run: npm run build
+        env:
+          # Тут ми передаємо ваш Секрет у процес збірки
+          # Зверніть увагу: назва має співпадати з назвою Секрету на GitHub
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
+
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build # Папка, яку генерує npm run build
