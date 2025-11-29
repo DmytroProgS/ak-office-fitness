@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../../firebase'; // Імпортуємо наш auth об'єкт
+import { doc, setDoc } from "firebase/firestore"; // <--- ДОДАНО: Функції Firestore
+import { auth, db } from '../../firebase'; // <--- ДОДАНО: Екземпляр db (Firestore)
 
-// Ми будемо використовувати спільні стилі з Wellness, тому додамо їх пізніше
+// Припускаємо, що стилі Register.css використовують ті ж класи, що й Wellness
 // import './Register.css'; 
 
 const Register = () => {
@@ -23,17 +24,35 @@ const Register = () => {
         }
 
         try {
-            // Створення користувача в Firebase Authentication
+            // 1. Створення користувача в Firebase Authentication
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            console.log("Успішна реєстрація:", userCredential.user);
+            const user = userCredential.user;
             
-            // Тут у майбутньому ми будемо зберігати додаткові дані (ПІБ) у Firestore
-            
+            // 2. ЗБЕРЕЖЕННЯ ДАНИХ У FIRESTORE
+            // Використовуємо UID користувача як унікальний ID документа в колекції 'users'
+            await setDoc(doc(db, "users", user.uid), {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                createdAt: new Date(), // Додаткова інформація
+            });
+
             alert("Реєстрація успішна! Ви можете увійти.");
             navigate('/login'); // Перенаправлення на сторінку входу
         } catch (error) {
             console.error("Помилка реєстрації:", error.message);
-            alert(`Помилка реєстрації: ${error.message}`);
+            
+            // Краще обробляти специфічні помилки Firebase
+            let errorMessage = "Невідома помилка реєстрації.";
+            if (error.code === 'auth/email-already-in-use') {
+                errorMessage = "Ця електронна пошта вже використовується.";
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = "Пароль має бути не менше 6 символів.";
+            } else {
+                errorMessage = error.message;
+            }
+            
+            alert(`Помилка реєстрації: ${errorMessage}`);
         }
     };
 
