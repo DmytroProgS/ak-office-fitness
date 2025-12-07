@@ -1,63 +1,49 @@
 // src/hooks/useUserData.js
-
 import { useState, useEffect } from 'react';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { doc, getDoc } from 'firebase/firestore'; 
-import { auth, db } from '../firebase'; // db - імпорт Firestore
+import { auth, db } from '../firebase'; 
 
-/**
- * Хук для отримання додаткових даних користувача (ім'я, прізвище) з Firestore
- * @returns {object} {userData, loading, error}
- */
 const useUserData = () => {
-    // 1. Отримуємо стан автентифікації (UID)
     const [user, loadingAuth] = useAuthState(auth);
-    
-    // 2. Стан для зберігання даних з Firestore
     const [userData, setUserData] = useState(null);
-    const [loadingData, setLoadingData] = useState(false);
-    const [error, setError] = useState(null);
+    const [loadingData, setLoadingData] = useState(true);
 
     useEffect(() => {
-        // Запускаємо, якщо автентифікація завершена і користувач увійшов
-        if (!loadingAuth && user) {
+        if (loadingAuth) return; 
+
+        if (user) {
+            setLoadingData(true); // Починаємо завантаження даних
+            const docRef = doc(db, 'users', user.uid);
             
-            setLoadingData(true);
-            setError(null);
-
-            const fetchUserData = async () => {
-                try {
-                    // 1. Створюємо посилання на документ користувача в колекції 'users'
-                    // UID користувача використовується як ID документа
-                    const docRef = doc(db, 'users', user.uid);
-                    
-                    // 2. Отримуємо документ
-                    const docSnap = await getDoc(docRef);
-
+            // onSnapshot встановлює постійне прослуховування
+            const unsubscribe = onSnapshot(docRef, 
+                (docSnap) => {
                     if (docSnap.exists()) {
-                        // Якщо документ знайдено, зберігаємо дані
-                        setUserData(docSnap.data());
+                        setUserData(docSnap.data()); 
                     } else {
-                        // Якщо дані не знайдено (хоча мали б бути)
-                        console.warn("Дані користувача в Firestore не знайдені.");
-                        setUserData({ firstName: "User", lastName: "Data Missing" }); // Заглушка
+                        setUserData(null);
                     }
-                } catch (e) {
-                    console.error("Помилка при отриманні даних користувача:", e);
-                    setError(e);
-                } finally {
+                    // ВАЖЛИВО: setLoadingData(false) має спрацювати після першої відповіді
+                    setLoadingData(false); 
+                }, 
+                (error) => {
+                    console.error("Помилка завантаження даних користувача:", error);
                     setLoadingData(false);
                 }
-            };
-            
-            fetchUserData();
-        } else if (!loadingAuth && !user) {
-            // Якщо користувач вийшов, очищаємо дані
-            setUserData(null);
-        }
-    }, [user, loadingAuth]); // Залежності: user та loadingAuth
+            );
 
-    return { userData, loading: loadingAuth || loadingData, error };
+            // Функція очищення (відписка від слухача)
+            return () => unsubscribe(); 
+
+        } else {
+            // Користувач вийшов або не увійшов
+            setUserData(null);
+            setLoadingData(false);
+        }
+    }, [user, loadingAuth]); // Залежності: user і loadingAuth
+
+    return { userData, loading: loadingData };
 };
 
 export default useUserData;

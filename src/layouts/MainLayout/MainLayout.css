@@ -1,10 +1,28 @@
-/* src/layouts/MainLayout/MainLayout.css (ФІНАЛЬНІ СТИЛІ МАКЕТУ) */
+/* src/layouts/MainLayout/MainLayout.css (ФІНАЛЬНИЙ КОД ДЛЯ ВИПРАВЛЕННЯ МАКЕТУ) */
+
+/* ------------------------------------------- */
+/* 0. ГЛОБАЛЬНА ОБГОРТКА */
+/* ------------------------------------------- */
+
+.main-layout-container {
+    /* Додаємо відступ, щоб контент не ховався під фіксованою шапкою */
+    padding-top: 50px; 
+    /* Можливо, потрібно додати flex-direction: column; якщо це необхідно для всієї сторінки */
+}
 
 /* ------------------------------------------- */
 /* 1. СТИЛІ ШАПКИ (HEADER) */
 /* ------------------------------------------- */
 
 .main-header {
+    /* *** КРИТИЧНА ЗМІНА: Фіксуємо шапку *** */
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; 
+    /* ------------------------------------------ */
+    
     padding: 10px 20px;
     background-color: #333; 
     color: white;
@@ -51,44 +69,26 @@
 
 
 /* ------------------------------------------- */
-/* 2. СТИЛІ ОСНОВНОГО КОНТЕЙНЕРА (BODY) */
-/* ------------------------------------------- */
-
-/* Обгортка для Sidebar та Main Content (Flexbox для 2-х колонок) */
-.content-and-sidebar-wrapper {
-    display: flex;
-    max-width: 1400px; 
-    margin: 0 auto; 
-    padding-top: 20px;
-    gap: 20px; /* Відстань між сайдбаром і контентом */
-}
-
-/* Основний вміст (Права широка колонка) */
-.main-content {
-    flex-grow: 1; /* Займає весь доступний простір */
-    padding: 0 0 50px 0;
-}
-
-/* Якщо Sidebar не відображається (напр., на сторінці входу/реєстрації) */
-.content-and-sidebar-wrapper.no-sidebar .main-content {
-    width: 100%; 
-    padding: 20px; /* Додаємо padding, коли немає сайдбару */
-}
-
-/* ------------------------------------------- */
-/* 3. СТИЛІ ЛІВОГО SIDEBAR */
+/* 2. СТИЛІ ЛІВОГО SIDEBAR (ТЕПЕР ВІН ФІКСОВАНИЙ!) */
 /* ------------------------------------------- */
 
 .left-sidebar {
+    /* *** КРИТИЧНА ЗМІНА: Фіксуємо сайдбар на місці *** */
+    position: fixed; 
+    top: 50px; /* Висота вашої шапки */
+    left: 0;
+    z-index: 999; 
+    height: calc(100vh - 50px); /* Вся висота екрана мінус висота шапки */
+    /* ----------------------------------------------- */
+
     width: 250px; 
     flex-shrink: 0; 
-    padding: 20px 0; /* Вертикальний padding */
+    padding: 20px 0; 
     background-color: #333; 
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     color: white;
-    height: fit-content; 
-    /* Встановлюємо Flexbox для внутрішнього вертикального розташування елементів */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    border-radius: 0; /* Прибираємо округлення, якщо він займає всю висоту */
+    
     display: flex; 
     flex-direction: column;
     align-items: center;
@@ -130,7 +130,6 @@
 .sidebar-menu {
     width: 100%;
     padding: 10px 0;
-    /* Видаляємо нижню межу, оскільки її має останній елемент меню */
 }
 
 .sidebar-menu-link {
@@ -138,12 +137,12 @@
     color: white;
     text-decoration: none;
     padding: 10px 20px; 
-    border-bottom: 1px solid #555; /* Роздільник між пунктами */
+    border-bottom: 1px solid #555; 
     transition: background-color 0.2s, color 0.2s;
 }
 
 .sidebar-menu-link:last-child {
-    border-bottom: none; /* Прибираємо роздільник для останнього елемента */
+    border-bottom: none; 
 }
 
 .sidebar-menu-link:hover {
@@ -157,5 +156,39 @@
     padding: 20px;
     width: 100%;
     border-top: 1px solid #555;
-    margin-top: auto; /* Притискає елемент до низу сайдбару, якщо він довший */
+    margin-top: auto; 
+}
+
+
+/* ------------------------------------------- */
+/* 3. ОСНОВНА ОБГОРТКА ВМІСТУ (Main Content Wrapper) */
+/* ------------------------------------------- */
+
+/* Обгортка для вмісту сторінки, яка має відступати від Header та Sidebar */
+.page-content-wrapper {
+    /* *** КРИТИЧНА ЗМІНА: Даємо відступ, щоб контент не накладався *** */
+    margin-left: 250px; /* Ширина фіксованого Sidebar */
+    /* ---------------------------------------------------------------- */
+    
+    flex-grow: 1; 
+    /* max-width: 1400px; - Цей стиль краще перенести на .main-content */
+    margin: 0 auto;
+    padding: 20px; 
+    min-height: calc(100vh - 50px); /* Для правильної висоти, якщо контенту мало */
+}
+
+/* Обробка випадку, коли Sidebar прихований (наприклад, на /login) */
+.page-content-wrapper.no-sidebar {
+    margin-left: 0; /* Прибираємо відступ, якщо Sidebar не видно */
+    max-width: 1400px; 
+}
+
+
+/* ------------------------------------------- */
+/* 4. СТИЛІ ОСНОВНОГО КОНТЕНТУ */
+/* ------------------------------------------- */
+
+.main-content {
+    flex-grow: 1; 
+    padding: 0 0 50px 0;
 }
