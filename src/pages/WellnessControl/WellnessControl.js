@@ -13,11 +13,11 @@ const EMAILJS_PUBLIC_KEY = 'h4ZitYEvI_2ynZzgm';
 const RECIPIENT_EMAIL = 'akkfitness13@gmail.com'; 
 // ------------------------------------
 
-// ⭐ ВИПРАВЛЕННЯ: ІНІЦІАЛІЗАЦІЯ EMAILJS
-// Ініціалізуємо EmailJS один раз, щоб потім функція send() приймала лише 3 аргументи.
+// ⭐ ІНІЦІАЛІЗАЦІЯ EMAILJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
 const WellnessControl = () => {
+    // Отримуємо дані користувача та статус завантаження
     const { userData, loading: loadingData } = useUserData();
 
     const [formData, setFormData] = useState({
@@ -60,19 +60,19 @@ const WellnessControl = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // ⭐ ФІНАЛЬНЕ ВИПРАВЛЕННЯ: Додана перевірка !userData.uid.
-        // Це запобігає помилці на рядку 112, коли uid ще не завантажено.
+        // ⭐ КРИТИЧНИЙ ЗАХИСТ: Блокуємо відправку, якщо дані користувача не завантажено
         if (loadingData || !userData || !userData.email || !userData.uid) {
             alert("Будь ласка, дочекайтесь завантаження даних користувача або увійдіть знову.");
             return;
         }
-
+        
+        // --- Створення параметрів для EmailJS ---
         const templateParams = {
             to_email: RECIPIENT_EMAIL, 
             
-            // ВИПРАВЛЕННЯ 1: Використовуємо Optional Chaining (?.) для безпечного from_name
+            // ВИПРАВЛЕННЯ: Додано ?? '' для безпеки EmailJS від TypeError: Cannot read properties of undefined (reading 'indexOf')
             from_name: userData.firstName || userData.email?.split('@')[0] || 'Anonymous', 
-            from_email: userData.email, 
+            from_email: userData.email ?? '', // ГАРАНТУЄМО, ЩО ЦЕ БУДЕ РЯДОК
             
             // Дані опитувальника
             sleep_quality: formData.sleepQuality,
@@ -90,20 +90,18 @@ const WellnessControl = () => {
 
         // 1. Створення об'єкта запису для Firestore
         const wellnessRecord = {
-            ...formData, // Всі дані форми
+            ...formData, 
             userId: userData.uid,
-            timestamp: serverTimestamp(), // Позначка часу сервера Firebase (ВАЖЛИВО)
-            userName: userData.firstName || userData.email, // Для легшої ідентифікації в базі
+            timestamp: serverTimestamp(), 
+            userName: userData.firstName || userData.email, 
         };
 
         try {
             // 2. ЗБЕРЕЖЕННЯ ДАНИХ У СУБКОЛЕКЦІЮ FIREBASE
-            // Рядок 112: collection(db, 'users', userData.uid, 'wellnessRecords') - тепер безпечний завдяки перевірці вище
             const recordsCollectionRef = collection(db, 'users', userData.uid, 'wellnessRecords');
             await addDoc(recordsCollectionRef, wellnessRecord);
 
             // 3. ВІДПРАВКА EMAIL
-            // Виклик з 3 аргументами після ініціалізації
             await emailjs.send(
                 EMAILJS_SERVICE_ID,
                 EMAILJS_TEMPLATE_ID,

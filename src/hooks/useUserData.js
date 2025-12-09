@@ -7,28 +7,35 @@ import { auth, db } from '../firebase';
 const useUserData = () => {
     const [user, loadingAuth] = useAuthState(auth);
     const [userData, setUserData] = useState(null);
-    const [loadingData, setLoadingData] = useState(true);
+    
+    // Встановлюємо loadingData в true, поки не отримаємо перший результат з useAuthState
+    const [loadingData, setLoadingData] = useState(true); 
 
     useEffect(() => {
+        // 1. Чекаємо, поки useAuthState визначиться
         if (loadingAuth) return; 
-
+        
+        // Встановлюємо loadingData в true при зміні користувача, якщо він є.
+        // Це спрацює лише один раз після завантаження useAuthState.
         if (user) {
-            setLoadingData(true); // Починаємо завантаження даних
+            setLoadingData(true); 
             const docRef = doc(db, 'users', user.uid);
             
-            // onSnapshot встановлює постійне прослуховування
+            // onSnapshot встановлює постійне прослуховування даних користувача
             const unsubscribe = onSnapshot(docRef, 
                 (docSnap) => {
                     if (docSnap.exists()) {
-                        setUserData(docSnap.data()); 
+                        setUserData({ ...docSnap.data(), uid: user.uid }); // ⭐ ПОКРАЩЕННЯ: Додаємо UID до даних
                     } else {
-                        setUserData(null);
+                        // Якщо документ не знайдено (хоча він є у вашій базі), повертаємо лише UID та email
+                        setUserData({ uid: user.uid, email: user.email }); 
                     }
                     // ВАЖЛИВО: setLoadingData(false) має спрацювати після першої відповіді
                     setLoadingData(false); 
                 }, 
                 (error) => {
                     console.error("Помилка завантаження даних користувача:", error);
+                    // Навіть у разі помилки ми припиняємо завантаження
                     setLoadingData(false);
                 }
             );
@@ -41,7 +48,7 @@ const useUserData = () => {
             setUserData(null);
             setLoadingData(false);
         }
-    }, [user, loadingAuth]); // Залежності: user і loadingAuth
+    }, [user, loadingAuth]); 
 
     return { userData, loading: loadingData };
 };
