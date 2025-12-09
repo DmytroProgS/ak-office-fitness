@@ -1,14 +1,26 @@
-// src/pages/WellnessControl/WellnessControl.js
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser'; 
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
+import useUserData from '../../hooks/useUserData'; 
+import { db } from '../../firebase'; 
+
 import './WellnessControl.css'; 
 
+// !!! ВАШІ РЕАЛЬНІ КЛЮЧІ EMAILJS !!!
+const EMAILJS_SERVICE_ID = 'service_m3w0lih';   
+const EMAILJS_TEMPLATE_ID = 'template_6cig964'; 
+const EMAILJS_PUBLIC_KEY = 'h4ZitYEvI_2ynZzgm'; 
+const RECIPIENT_EMAIL = 'akkfitness13@gmail.com'; 
+// ------------------------------------
+
+// ⭐ ВИПРАВЛЕННЯ: ІНІЦІАЛІЗАЦІЯ EMAILJS
+// Ініціалізуємо EmailJS один раз, щоб потім функція send() приймала лише 3 аргументи.
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
 const WellnessControl = () => {
+    const { userData, loading: loadingData } = useUserData();
+
     const [formData, setFormData] = useState({
-        // Контактні дані
-        firstName: '',           
-        lastName: '',            
-        email: '',               
-        
         // Дані опитувальника (шкала 1-10)
         sleepQuality: 5,         
         sportLevel: 5,           
@@ -29,7 +41,6 @@ const WellnessControl = () => {
         const { name, value, type, checked } = e.target;
 
         if (type === 'checkbox') {
-            // Обробка множинного вибору (зони болю)
             const newPainArea = checked
                 ? [...formData.painArea, value]
                 : formData.painArea.filter((area) => area !== value);
@@ -46,23 +57,74 @@ const WellnessControl = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Мінімальна перевірка
-        if (!formData.firstName || !formData.email) {
-            alert("Будь ласка, введіть Ім'я та Пошту.");
+        // ⭐ ФІНАЛЬНЕ ВИПРАВЛЕННЯ: Додана перевірка !userData.uid.
+        // Це запобігає помилці на рядку 112, коли uid ще не завантажено.
+        if (loadingData || !userData || !userData.email || !userData.uid) {
+            alert("Будь ласка, дочекайтесь завантаження даних користувача або увійдіть знову.");
             return;
         }
 
-        // Тимчасово виводимо дані у консоль
-        console.log("Дані опитувальника:", formData);
-        alert("Дані збережено! Перевірте консоль для деталізації. (Налаштування відправки email буде наступним кроком).");
-        
-        // Тут буде реальна логіка відправки на вашу пошту (пізніше)
+        const templateParams = {
+            to_email: RECIPIENT_EMAIL, 
+            
+            // ВИПРАВЛЕННЯ 1: Використовуємо Optional Chaining (?.) для безпечного from_name
+            from_name: userData.firstName || userData.email?.split('@')[0] || 'Anonymous', 
+            from_email: userData.email, 
+            
+            // Дані опитувальника
+            sleep_quality: formData.sleepQuality,
+            sport_level: formData.sportLevel,
+            stress_level: formData.stressLevel,
+            office_exercises: formData.officeExercises,
+            
+            // Біль/дискомфорт
+            has_pain: formData.hasPain,
+            pain_area: formData.hasPain === 'Так' && formData.painArea.length > 0 ? formData.painArea.join(', ') : 'Немає',
+            pain_description: formData.painDescription || 'Немає додаткового опису.',
+            
+            timestamp: new Date().toLocaleString('uk-UA'),
+        };
+
+        // 1. Створення об'єкта запису для Firestore
+        const wellnessRecord = {
+            ...formData, // Всі дані форми
+            userId: userData.uid,
+            timestamp: serverTimestamp(), // Позначка часу сервера Firebase (ВАЖЛИВО)
+            userName: userData.firstName || userData.email, // Для легшої ідентифікації в базі
+        };
+
+        try {
+            // 2. ЗБЕРЕЖЕННЯ ДАНИХ У СУБКОЛЕКЦІЮ FIREBASE
+            // Рядок 112: collection(db, 'users', userData.uid, 'wellnessRecords') - тепер безпечний завдяки перевірці вище
+            const recordsCollectionRef = collection(db, 'users', userData.uid, 'wellnessRecords');
+            await addDoc(recordsCollectionRef, wellnessRecord);
+
+            // 3. ВІДПРАВКА EMAIL
+            // Виклик з 3 аргументами після ініціалізації
+            await emailjs.send(
+                EMAILJS_SERVICE_ID,
+                EMAILJS_TEMPLATE_ID,
+                templateParams
+            );
+            
+            alert(`✅ Опитувальник успішно надіслано та збережено!`);
+            
+            // 4. Очищення форми після успішної відправки
+            setFormData({
+                sleepQuality: 5, sportLevel: 5, stressLevel: 5, officeExercises: 5,
+                hasPain: 'Ні', painArea: [], painDescription: '',
+            });
+
+        } catch (error) {
+            console.error("Помилка обробки опитувальника (Firebse/EmailJS):", error);
+            alert("❌ Помилка: Звіт не надіслано або не збережено. Перевірте консоль.");
+        }
     };
     
-    // Компонент для слайдерів (зміна назви, щоб відображати зірочки)
+    // Компонент для слайдерів
     const StarRatingSlider = ({ name, label }) => (
         <div className="form-group">
             <label htmlFor={name}>
@@ -89,22 +151,6 @@ const WellnessControl = () => {
             
             <form onSubmit={handleSubmit} className="wellness-form">
                 
-                {/* -------------------- КОНТАКТНІ ДАНІ -------------------- */}
-                <div className="contact-group">
-                    <div className="form-group half-width">
-                        <label htmlFor="firstName">Ім'я:</label>
-                        <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group half-width">
-                        <label htmlFor="lastName">Прізвище:</label>
-                        <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />
-                    </div>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email (для відповіді):</label>
-                    <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} placeholder="example@gmail.com" required />
-                </div>
-                
                 <hr className="divider" />
 
                 {/* -------------------- ПИТАННЯ (ШКАЛА) -------------------- */}
@@ -122,9 +168,7 @@ const WellnessControl = () => {
                         <label>
                             <input type="radio" name="hasPain" value="Так" checked={formData.hasPain === 'Так'} onChange={handleChange} /> Так
                         </label>
-                        <label>
                             <input type="radio" name="hasPain" value="Ні" checked={formData.hasPain === 'Ні'} onChange={handleChange} /> Ні
-                        </label>
                     </div>
                 </div>
 
@@ -160,7 +204,9 @@ const WellnessControl = () => {
                     </>
                 )}
 
-                <button type="submit" className="submit-button">Зберегти та надіслати опитувальник</button>
+                <button type="submit" className="submit-button" disabled={loadingData}>
+                    {loadingData ? 'Завантаження даних...' : 'Зберегти та надіслати опитувальник'}
+                </button>
             </form>
         </div>
     );
