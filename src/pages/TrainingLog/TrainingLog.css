@@ -1,0 +1,128 @@
+.training-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.training-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 25px;
+    height: fit-content;
+}
+
+.training-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.input-group select, 
+.input-group input, 
+.input-group textarea {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 12px;
+    color: white;
+    font-size: 1rem;
+}
+
+.input-group textarea {
+    height: 80px;
+    resize: none;
+}
+
+.range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #888;
+}
+
+/* Стилізація карток історії */
+.session-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.session-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    padding: 15px;
+    position: relative;
+    border-left: 4px solid #4CAF50;
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.session-type {
+    font-weight: bold;
+    color: #4CAF50;
+    font-size: 1.1rem;
+}
+
+.session-date {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.session-details {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9rem;
+    color: #ddd;
+    margin-bottom: 8px;
+}
+
+.session-comment {
+    font-style: italic;
+    color: #aaa;
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.2);
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.delete-session {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #ff5252;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+
+.delete-session:hover {
+    opacity: 1;
+}
+
+@media (max-width: 1000px) {
+    .training-grid {
+        grid-template-columns: 1fr;
+    }
+}

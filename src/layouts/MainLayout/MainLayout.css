@@ -1,194 +1,24 @@
-/* src/layouts/MainLayout/MainLayout.css (ФІНАЛЬНИЙ КОД ДЛЯ ВИПРАВЛЕННЯ МАКЕТУ) */
+/* src/layouts/MainLayout/MainLayout.css (НОВИЙ МІНІМАЛЬНИЙ КОД) */
 
-/* ------------------------------------------- */
-/* 0. ГЛОБАЛЬНА ОБГОРТКА */
-/* ------------------------------------------- */
-
-.main-layout-container {
-    /* Додаємо відступ, щоб контент не ховався під фіксованою шапкою */
-    padding-top: 50px; 
-    /* Можливо, потрібно додати flex-direction: column; якщо це необхідно для всієї сторінки */
-}
-
-/* ------------------------------------------- */
-/* 1. СТИЛІ ШАПКИ (HEADER) */
-/* ------------------------------------------- */
-
-.main-header {
-    /* *** КРИТИЧНА ЗМІНА: Фіксуємо шапку *** */
-    position: fixed; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; 
-    /* ------------------------------------------ */
-    
-    padding: 10px 20px;
-    background-color: #333; 
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.site-title {
-    margin: 0;
-    font-size: 1.5em;
-}
-
-/* Стилі для Навігації в шапці */
-.main-nav {
-    display: flex;
-    align-items: center;
-}
-
-.nav-link {
-    color: white;
-    text-decoration: none;
-    margin-left: 15px;
-    padding: 5px 10px;
-    transition: background-color 0.2s;
-}
-
-.nav-link:hover {
-    background-color: #555;
-    border-radius: 4px;
-}
-
-.logout-link {
-    cursor: pointer;
-    font-weight: bold;
-    color: #f7d540; /* Акцентний колір */
-}
-
-.logout-link:hover {
-    background-color: #444;
-    color: white;
-}
-
-
-/* ------------------------------------------- */
-/* 2. СТИЛІ ЛІВОГО SIDEBAR (ТЕПЕР ВІН ФІКСОВАНИЙ!) */
-/* ------------------------------------------- */
-
-.left-sidebar {
-    /* *** КРИТИЧНА ЗМІНА: Фіксуємо сайдбар на місці *** */
-    position: fixed; 
-    top: 50px; /* Висота вашої шапки */
-    left: 0;
-    z-index: 999; 
-    height: calc(100vh - 50px); /* Вся висота екрана мінус висота шапки */
-    /* ----------------------------------------------- */
-
-    width: 250px; 
-    flex-shrink: 0; 
-    padding: 20px 0; 
-    background-color: #333; 
-    color: white;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-    border-radius: 0; /* Прибираємо округлення, якщо він займає всю висоту */
-    
-    display: flex; 
-    flex-direction: column;
-    align-items: center;
-}
-
-/* --- Стилі для Картки Користувача --- */
-.user-profile-card {
-    width: 100%;
-    padding: 10px 0;
-    text-align: center;
-    border-bottom: 1px solid #555;
-    margin-bottom: 10px;
-}
-
-.user-avatar-placeholder {
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    border-radius: 50%;
-    background-color: #f7d540;
-    color: #333;
-    font-size: 1.8em;
-    font-weight: bold;
-    margin: 0 auto 10px;
-}
-
-.user-name {
-    margin: 0;
-    font-weight: 600;
-}
-
-.user-email {
-    margin: 0;
-    font-size: 0.8em;
-    color: #aaa;
-}
-
-/* --- Стилі для Вертикального Меню --- */
-.sidebar-menu {
-    width: 100%;
-    padding: 10px 0;
-}
-
-.sidebar-menu-link {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px; 
-    border-bottom: 1px solid #555; 
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.sidebar-menu-link:last-child {
-    border-bottom: none; 
-}
-
-.sidebar-menu-link:hover {
-    background-color: #4a4a4a;
-    color: #f7d540;
-}
-
-/* --- Стилі для Логотипу --- */
-.sidebar-logo-placeholder {
-    text-align: center;
-    padding: 20px;
-    width: 100%;
-    border-top: 1px solid #555;
-    margin-top: auto; 
-}
-
-
-/* ------------------------------------------- */
-/* 3. ОСНОВНА ОБГОРТКА ВМІСТУ (Main Content Wrapper) */
-/* ------------------------------------------- */
-
-/* Обгортка для вмісту сторінки, яка має відступати від Header та Sidebar */
-.page-content-wrapper {
-    /* *** КРИТИЧНА ЗМІНА: Даємо відступ, щоб контент не накладався *** */
-    margin-left: 250px; /* Ширина фіксованого Sidebar */
-    /* ---------------------------------------------------------------- */
-    
-    flex-grow: 1; 
-    /* max-width: 1400px; - Цей стиль краще перенести на .main-content */
-    margin: 0 auto;
-    padding: 20px; 
-    min-height: calc(100vh - 50px); /* Для правильної висоти, якщо контенту мало */
-}
-
-/* Обробка випадку, коли Sidebar прихований (наприклад, на /login) */
-.page-content-wrapper.no-sidebar {
-    margin-left: 0; /* Прибираємо відступ, якщо Sidebar не видно */
-    max-width: 1400px; 
-}
-
-
-/* ------------------------------------------- */
-/* 4. СТИЛІ ОСНОВНОГО КОНТЕНТУ */
-/* ------------------------------------------- */
+/* Більшість стилів для макету (dashboard-layout, main-content-area) 
+   тепер знаходиться у файлі src/styles/Global.css. 
+   Цей файл залишається для унікальних стилів MainLayout.
+*/
 
 .main-content {
-    flex-grow: 1; 
-    padding: 0 0 50px 0;
+    /* Обмеження максимальної ширини контенту всередині main-content-area */
+    max-width: 1400px; 
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Стилі для екрану завантаження автентифікації */
+.loading-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-color, #f1f1f1); /* Використовуємо колір з Global.css або fallback */
+    background-color: var(--secondary-color, #17153B);
 }

@@ -1,0 +1,33 @@
+/* src/components/WellnessChart/WellnessChart.css */
+
+.chart-container-wrapper {
+    width: 100%;
+    /* Наслідує фон та тінь від dashboard-card */
+    padding: 20px;
+}
+
+.chart-container-wrapper h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-color);
+    font-size: 20px;
+}
+
+.no-chart-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 350px;
+    color: var(--text-muted);
+    background-color: var(--secondary-color-light);
+    border-radius: 8px;
+}
+
+/* Перевизначення стилів для Recharts Tooltip */
+.recharts-tooltip-wrapper {
+    pointer-events: none;
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 5px;
+    border-radius: 4px;
+}

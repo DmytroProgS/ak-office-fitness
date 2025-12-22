@@ -1,0 +1,50 @@
+/* src/components/WellnessDataTable/WellnessDataTable.css */
+
+.data-table-wrapper {
+    /* Дозволяє горизонтальний скрол на маленьких екранах */
+    overflow-x: auto;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    margin-top: 20px;
+}
+
+.data-table-scroll {
+    min-width: 600px; /* Мінімальна ширина таблиці */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; /* Прибираємо подвійні лінії */
+    font-size: 0.9em;
+}
+
+table thead {
+    background-color: var(--page-bg); 
+}
+
+table th {
+    /* Стилі для заголовків */
+    padding: 12px 15px;
+    text-align: left;
+    color: var(--text-color-strong);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+table td {
+    /* Стилі для осередків даних */
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+/* Чергування кольорів рядків для кращої читабельності */
+table tbody tr:nth-child(even) {
+    background-color: var(--input-bg);
+}
+
+table tbody tr:hover {
+    background-color: rgba(var(--primary-rgb), 0.1);
+}

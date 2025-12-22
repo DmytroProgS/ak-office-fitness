@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from '../../firebase';
+import './Register.css'; // Обов'язково додайте цей імпорт
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +13,6 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Прогрів Firebase Auth
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, () => {});
     return () => unsubscribe();
@@ -26,8 +26,6 @@ const Register = () => {
     }
 
     setIsLoading(true);
-    const start = performance.now();
-
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -36,65 +34,55 @@ const Register = () => {
         firstName,
         lastName,
         email,
+        uid: user.uid,
         createdAt: new Date(),
       });
 
-      const end = performance.now();
-      console.log(`⏱️ Реєстрація зайняла ${Math.round(end - start)} мс`);
-
-      alert("Реєстрація успішна! Ви можете увійти.");
+      alert("Реєстрація успішна!");
       navigate('/login');
     } catch (error) {
       console.error("Помилка реєстрації:", error.message);
-
-      let errorMessage = "Невідома помилка реєстрації.";
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "Ця електронна пошта вже використовується.";
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = "Пароль має бути не менше 6 символів.";
-      } else {
-        errorMessage = error.message;
-      }
-
-      alert(`Помилка реєстрації: ${errorMessage}`);
+      alert(`Помилка: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="wellness-container">
-      <h1>Реєстрація користувача</h1>
-      <form onSubmit={register} className="wellness-form">
-        <div className="contact-group">
-          <div className="form-group half-width">
-            <label htmlFor="firstName">Ім'я:</label>
-            <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1>Реєстрація</h1>
+        <form onSubmit={register} className="auth-form">
+          <div className="input-row">
+            <div className="form-group">
+              <label>Ім'я</label>
+              <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ім'я" required />
+            </div>
+            <div className="form-group">
+              <label>Прізвище</label>
+              <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Прізвище" required />
+            </div>
           </div>
-          <div className="form-group half-width">
-            <label htmlFor="lastName">Прізвище:</label>
-            <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+
+          <div className="form-group">
+            <label>Email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="example@mail.com" required />
           </div>
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
+          <div className="form-group">
+            <label>Пароль</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Мінімум 6 символів" required />
+          </div>
 
-        <div className="form-group">
-          <label htmlFor="password">Пароль:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
+          <button type="submit" className="auth-button" disabled={isLoading}>
+            {isLoading ? "Завантаження..." : "Зареєструватися"}
+          </button>
 
-        <button type="submit" className="submit-button" disabled={isLoading}>
-          {isLoading ? "Реєстрація..." : "Зареєструватися"}
-        </button>
-
-        <p style={{ color: 'white', textAlign: 'center', marginTop: '15px' }}>
-          Вже маєте акаунт? <a href="/login" style={{ color: '#f7d540', textDecoration: 'none' }}>Увійти</a>
-        </p>
-      </form>
+          <p className="auth-footer">
+            Вже маєте акаунт? <Link to="/login">Увійти</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 };

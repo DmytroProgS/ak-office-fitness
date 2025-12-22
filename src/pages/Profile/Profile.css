@@ -1,0 +1,139 @@
+/* src/pages/Profile/Profile.css */
+
+.profile-container {
+    padding: 30px;
+    background-color: var(--page-bg);
+}
+
+.profile-form {
+    max-width: 800px;
+    margin-top: 20px;
+    background-color: var(--card-bg);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-medium);
+}
+
+.form-section {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.form-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-color);
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+    color: var(--text-color);
+    background-color: var(--input-bg);
+}
+
+/* Стиль для полів, які НЕ редагуються */
+.read-only {
+    background-color: var(--page-bg) !important;
+    border-color: var(--page-bg) !important;
+    cursor: default;
+}
+
+/* Стиль для полів, які редагуються */
+.editable:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+.info-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.info-group label {
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.info-value {
+    font-weight: normal;
+    color: var(--text-color);
+}
+
+.profile-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color 0.3s;
+}
+
+.edit-button {
+    background-color: var(--info-color);
+    color: white;
+}
+.edit-button:hover {
+    background-color: #0d8b94;
+}
+
+.save-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+.save-button:hover {
+    background-color: #0056b3;
+}
+
+.cancel-button {
+    background-color: var(--border-color);
+    color: var(--text-color);
+}
+.cancel-button:hover {
+    background-color: #d8d8d8;
+}
+
+/* Повідомлення про статус */
+.status-message {
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+.success {
+    background-color: var(--success-bg);
+    color: var(--success-color);
+}
+.error {
+    background-color: var(--danger-bg);
+    color: var(--danger-color);
+}
+.loading {
+    color: var(--info-color);
+}

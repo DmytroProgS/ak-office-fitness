@@ -1,0 +1,62 @@
+/* src/pages/Reports/Reports.css */
+
+.reports-container {
+    padding: 20px;
+    background-color: var(--page-bg);
+}
+
+.reports-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow-small);
+    max-width: 600px;
+}
+
+.period-label {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.period-select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.charts-grid {
+    display: grid;
+    /* Налаштування сітки для графіків */
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); 
+    gap: 25px;
+}
+
+.chart-wrapper {
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+}
+
+.data-table-section {
+    margin-top: 40px;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+}
+
+.status-info {
+    padding: 15px;
+    background-color: var(--info-bg);
+    color: var(--info-color);
+    border-radius: 6px;
+}

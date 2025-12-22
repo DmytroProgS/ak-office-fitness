@@ -1,0 +1,58 @@
+/* src/styles/Global.css (Або додайте до index.css) */
+
+/* Змінні кольорів (Визначено за цільовим дизайном) */
+:root {
+    --primary-color: #5d50c6;      /* Основний акцент (Фіолетовий) */
+    --secondary-color: #17153B;    /* Темний фон */
+    --card-background: #232049;    /* Фон карток/сайдбару */
+    --text-color: #f1f1f1;         /* Основний світлий текст */
+    --text-muted: #8c8c8c;         /* Приглушений текст */
+    --success-color: #50c65d;      /* Зелений (Фантастика) */
+    --warning-color: #c69f50;      /* Жовтий/Оранжевий (Добре) */
+    --danger-color: #c65050;       /* Червоний (Погано) */
+    --border-radius: 12px;
+    --padding-card: 20px;
+}
+
+/* Базові стилі */
+body {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    /* Ви можете додати Poppins або інший шрифт, який використовується на цільовому сайті */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* ОСНОВНИЙ МАКЕТ (Dashboard) */
+.dashboard-layout {
+    display: grid;
+    /* 280px для сайдбару, решта для основного контенту */
+    grid-template-columns: 280px 1fr; 
+    min-height: 100vh;
+}
+
+.main-content-area {
+    padding: 25px;
+}
+
+/* ОСНОВНІ СТИЛІ КАРТОК */
+.dashboard-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: var(--padding-card);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}

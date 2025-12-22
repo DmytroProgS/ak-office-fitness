@@ -1,12 +1,15 @@
+
+
 import React from 'react';
+import './WeeklyIndividual.css'; // Необов'язково, але бажано
 
 const WeeklyIndividual = () => {
-    const title = "WEEKLY INDIVIDUAL";
-    
     return (
-        <div className="page-content">
-            <h1>{title}</h1>
-            <p>Тут буде інформація про {title}.</p>
+        <div className="page-container">
+            <h1 className="page-title">🗓️ Weekly Individual: Планування мікроциклу</h1>
+            <p className="page-status-message">
+                Цей розділ знаходиться в розробці. Тут буде реалізовано відстеження травм та відновлення.
+            </p>
         </div>
     );
 };

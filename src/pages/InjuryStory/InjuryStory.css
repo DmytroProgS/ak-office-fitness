@@ -1,0 +1,75 @@
+/* src/pages/InjuryStory/InjuryStory.css */
+
+.injury-story-container {
+    padding: 20px;
+}
+
+.page-title {
+    color: var(--text-color-strong);
+    margin-bottom: 20px;
+    font-size: 2em;
+}
+
+/* Стилі для повідомлень про статус */
+.status-message {
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.status-error {
+    background-color: rgba(var(--danger-rgb), 0.1);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+/* Забезпечуємо, що секція історії має відступ від форми */
+.history-section {
+    margin-top: 30px;
+}
+
+/* Повідомлення про успіх */
+.success-toast {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Розділення карток */
+.injury-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px; /* ⭐ Ось цей відступ розділяє картки */
+    transition: transform 0.2s;
+}
+
+.injury-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.injury-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.injury-date {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
