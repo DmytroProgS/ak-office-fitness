@@ -1,77 +1,22 @@
-/* src/components/Sidebar.css */
-
 .sidebar {
-    background-color: var(--card-background);
-    color: var(--text-color);
-    padding: 25px 20px;
-    height: 100%;
-    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
-    /* Включаємо flex, щоб позиціонувати елементи: лого, меню, користувач */
-    display: flex;
-    flex-direction: column;
-}
-
-.logo-section {
-    margin-bottom: 40px;
-    padding-left: 10px;
-}
-
-.logo-text {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--primary-color);
-    letter-spacing: 0.5px;
-}
-
-.nav-menu {
-    flex-grow: 1; /* Займе весь доступний простір */
+    width: 280px;
+    background-color: #111;
+    border-right: 1px solid #222;
+    padding: 30px 0;
 }
 
 .nav-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 10px;
-    margin-bottom: 5px;
-    color: var(--text-muted);
-    font-size: 16px;
-    border-radius: var(--border-radius);
-    transition: background-color 0.2s, color 0.2s;
+    display: block;
+    padding: 15px 30px;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 1rem;
+    border-left: 3px solid transparent;
+    transition: 0.3s;
 }
 
-.nav-item:hover,
-.nav-item.active {
-    background-color: rgba(93, 80, 198, 0.2); /* Прозорий акцентний колір */
-    color: var(--text-color);
-}
-
-.nav-item i {
-    margin-right: 15px;
-    font-size: 20px;
-    /* Тут вам потрібно буде додати стилі для іконок (наприклад, FontAwesome або іконочні шрифти з цільового сайту) */
-}
-
-.user-section {
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.user-name {
-    font-weight: 600;
-    margin: 0 0 10px 0;
-    font-size: 15px;
-}
-
-.logout-btn {
-    width: 100%;
-    padding: 10px;
-    background-color: var(--danger-color);
-    color: var(--text-color);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.logout-btn:hover {
-    background-color: #a34040;
+.nav-item:hover, .nav-item.active {
+    color: #f7d540;
+    background: rgba(247, 213, 64, 0.05);
+    border-left-color: #f7d540;
 }

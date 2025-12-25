@@ -2,24 +2,22 @@
 
 /* Змінні кольорів (Визначено за цільовим дизайном) */
 :root {
-    --primary-color: #5d50c6;      /* Основний акцент (Фіолетовий) */
-    --secondary-color: #17153B;    /* Темний фон */
-    --card-background: #232049;    /* Фон карток/сайдбару */
-    --text-color: #f1f1f1;         /* Основний світлий текст */
-    --text-muted: #8c8c8c;         /* Приглушений текст */
-    --success-color: #50c65d;      /* Зелений (Фантастика) */
-    --warning-color: #c69f50;      /* Жовтий/Оранжевий (Добре) */
-    --danger-color: #c65050;       /* Червоний (Погано) */
-    --border-radius: 12px;
+    --primary-color: #f7d540;      /* Золотий */
+    --secondary-color: #000000;    /* Чистий чорний для фону */
+    --card-background: #111111;    /* Темно-сірий для карток/сайбару */
+    --text-color: #ffffff;         /* Білий текст */
+    --text-muted: #aaaaaa;         /* Приглушений текст */
+    --border-radius: 0px;          /* На макеті все досить гостре, або мінімальне закруглення */
     --padding-card: 20px;
 }
+
 
 /* Базові стилі */
 body {
     background-color: var(--secondary-color);
     color: var(--text-color);
     /* Ви можете додати Poppins або інший шрифт, який використовується на цільовому сайті */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: 'Inter', sans-serif; /* Популярний шрифт для таких інтерфейсів */
     margin: 0;
     padding: 0;
     overflow-x: hidden;

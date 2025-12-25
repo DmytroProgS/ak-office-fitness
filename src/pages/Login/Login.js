@@ -1,82 +1,61 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { auth } from '../../firebase'; 
-import { useAuthState } from 'react-firebase-hooks/auth';
+import React, { useState } from 'react';
+import { auth } from '../../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate, Link } from 'react-router-dom';
+import './Login.css';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, loading] = useAuthState(auth);
-  const [isLoading, setIsLoading] = useState(false); // індикатор входу
-  const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-  // Прогрів Firebase Auth (щоб зменшити затримку при першому вході)
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, () => {});
-    return () => unsubscribe();
-  }, []);
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            navigate('/dashboard');
+        } catch (err) {
+            setError("Невірний email або пароль");
+        }
+    };
 
-  // Якщо користувач уже увійшов
-  useEffect(() => {
-    if (loading) return;
-    if (user) {
-      navigate('/');
-    }
-  }, [user, loading, navigate]);
-
-  const login = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const start = performance.now();
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      const end = performance.now();
-      console.log(`⏱️ Вхід зайняв ${Math.round(end - start)} мс`);
-      // Успішний вхід обробляється useEffect
-    } catch (error) {
-      console.error("Помилка входу:", error.message);
-
-      let errorMessage = "Невідома помилка входу.";
-      if (error.code === 'auth/user-not-found') {
-        errorMessage = "Користувача з такою поштою не існує.";
-      } else if (error.code === 'auth/wrong-password') {
-        errorMessage = "Невірний пароль.";
-      } else {
-        errorMessage = error.message;
-      }
-
-      alert(`Помилка входу: ${errorMessage}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <div className="wellness-container">
-      <h1>Вхід в Особистий Кабінет</h1>
-      <form onSubmit={login} className="wellness-form">
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    return (
+        <div className="auth-container">
+            <div className="auth-card">
+                <h1 className="auth-title">Вхід у <span className="gold-text">PAC</span></h1>
+                <p className="auth-subtitle">Ваш професійний кабінет атлета</p>
+                
+                {error && <div className="auth-error">{error}</div>}
+                
+                <form onSubmit={handleLogin} className="auth-form">
+                    <div className="input-group">
+                        <input 
+                            type="email" 
+                            placeholder="Електронна пошта" 
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)} 
+                            required 
+                        />
+                    </div>
+                    <div className="input-group">
+                        <input 
+                            type="password" 
+                            placeholder="Пароль" 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            required 
+                        />
+                    </div>
+                    <button type="submit" className="btn-auth-submit">Увійти</button>
+                </form>
+                
+                <p className="auth-footer">
+                    Немає акаунту? <Link to="/register">Зареєструватися</Link>
+                </p>
+            </div>
         </div>
-
-        <div className="form-group">
-          <label htmlFor="password">Пароль:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-
-        <button type="submit" className="submit-button" disabled={isLoading}>
-          {isLoading ? "Вхід..." : "Увійти"}
-        </button>
-
-        <p style={{ color: 'white', textAlign: 'center', marginTop: '15px' }}>
-          Не маєте акаунту? <a href="/register" style={{ color: '#f7d540', textDecoration: 'none' }}>Зареєструватися</a>
-        </p>
-      </form>
-    </div>
-  );
+    );
 };
 
 export default Login;

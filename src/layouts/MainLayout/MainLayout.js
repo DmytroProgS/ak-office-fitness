@@ -1,53 +1,52 @@
-// src/layouts/MainLayout/MainLayout.js
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase';
-import useUserData from '../../hooks/useUserData'; 
+import { signOut } from 'firebase/auth';
+// Додаємо Link сюди:
+import { useNavigate, Link } from 'react-router-dom'; 
+import Sidebar from '../../components/Sidebar/Sidebar';
+import './MainLayout.css';
+import logo from '../../assets/images/AK_logo.png';
 
-// Імпортуємо компонент сайдбару
-import Sidebar from '../../components/Sidebar/Sidebar'; 
-
-// Імпортуємо CSS
-import './MainLayout.css'; 
 
 const MainLayout = ({ children }) => {
-    // 1. Стан авторизації (Firebase Auth)
-    const [user, loadingAuth] = useAuthState(auth); 
-    
-    // 2. Дані профілю (Firestore)
-    const { userData, loading: loadingData } = useUserData();
-    
-    // Визначаємо, чи потрібно відображати сайдбар
-    const isUserLoggedIn = user && !loadingAuth;
-    
-    // 🛑 ОБРОБКА ЗАВАНТАЖЕННЯ
-    // Якщо Auth ще вантажиться АБО якщо користувач є, але його дані (ім'я) ще не підтягнулися з бази
-    if (loadingAuth || (user && loadingData)) {
-        return (
-            <div className="loading-screen">
-                <div className="spinner"></div> 
-                <p>Завантаження профілю...</p>
-            </div>
-        );
-    }
+    const [user, loadingAuth] = useAuthState(auth);
+    const navigate = useNavigate();
 
-    // Якщо користувач не залогінений (сторінки Login/Register) - показуємо контент без сайдбару
-    if (!isUserLoggedIn) {
-        return <>{children}</>; 
-    }
-    
-    // Формуємо ім'я для сайдбару (пріоритет на Ім'я, потім на частину Email)
-    const userName = userData?.firstName || userData?.email?.split('@')[0] || 'Спортсмен';
+    const handleLogout = async () => {
+        await signOut(auth);
+        navigate('/login');
+    };
+
+    if (loadingAuth) return <div className="loading">Завантаження...</div>;
+
+    const isUserLoggedIn = !!user;
 
     return (
-        <div className="dashboard-layout">
-            {/* Ліва панель навігації */}
-            <Sidebar userName={userName} />
+        <div className="app-container">
+            {isUserLoggedIn && (
+                <header className="top-header">
+                    <div className="header-left">
+    <Link to="/" className="header-logo-link" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+        <img src={logo} alt="AK" className="header-logo" />
+        <span className="brand-name">ProAthleteCare</span>
+    </Link>
+</div>
+                    <div className="header-right">
+                        <span className="user-greeting">
+                            Привіт, <strong>{user.email.split('@')[0]}</strong>
+                        </span>
+                        <button className="logout-header-btn" onClick={handleLogout}>Вийти</button>
+                    </div>
+                </header>
+            )}
             
-            {/* Основний контент сторінки */}
-            <main className="main-content">
-                {children}
-            </main>
+            <div className={isUserLoggedIn ? "dashboard-wrapper" : "auth-wrapper"}>
+                {isUserLoggedIn && <Sidebar />}
+                <main className="main-content">
+                    {children}
+                </main>
+            </div>
         </div>
     );
 };

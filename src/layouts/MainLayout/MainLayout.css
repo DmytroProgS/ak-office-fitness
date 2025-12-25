@@ -1,24 +1,57 @@
-/* src/layouts/MainLayout/MainLayout.css (НОВИЙ МІНІМАЛЬНИЙ КОД) */
-
-/* Більшість стилів для макету (dashboard-layout, main-content-area) 
-   тепер знаходиться у файлі src/styles/Global.css. 
-   Цей файл залишається для унікальних стилів MainLayout.
-*/
-
-.main-content {
-    /* Обмеження максимальної ширини контенту всередині main-content-area */
-    max-width: 1400px; 
-    margin: 0 auto;
-    width: 100%;
+.top-header {
+    height: 70px;
+    background: #000;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-/* Стилі для екрану завантаження автентифікації */
-.loading-screen {
-    min-height: 100vh;
+.header-logo {
+    height: 45px;
+    margin-right: 15px;
+}
+
+.brand-name {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.header-right {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: var(--text-color, #f1f1f1); /* Використовуємо колір з Global.css або fallback */
-    background-color: var(--secondary-color, #17153B);
+    gap: 20px;
+}
+
+.logout-header-btn {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 8px 18px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.logout-header-btn:hover {
+    background: var(--primary-color);
+    color: #000;
+}
+
+.dashboard-wrapper {
+    display: flex;
+    min-height: calc(100vh - 70px);
+}
+
+.main-content {
+    flex-grow: 1;
+    background: #080808;
+    padding: 40px;
 }

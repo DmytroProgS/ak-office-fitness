@@ -1,30 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../Register/Register.css'; // Використовуємо ті ж стилі
+import './HomeContent.css';
+import mainImage from '../../assets/images/main_image.jpg'; 
 
 const HomeContent = () => {
     return (
-        <div className="auth-container">
-            <div className="auth-card" style={{ textAlign: 'center' }}>
-                <h1>Ласкаво просимо!</h1>
-                <p style={{ color: '#ccc', marginBottom: '30px' }}>
-                    Оберіть дію, щоб розпочати роботу з AK-Office-Fitness
-                </p>
-                
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                    <Link to="/login" className="auth-button" style={{ textDecoration: 'none' }}>
-                        Увійти в систему
-                    </Link>
-                    <Link to="/register" className="auth-button" style={{ 
-                        textDecoration: 'none', 
-                        background: 'transparent', 
-                        border: '2px solid #f7d540', 
-                        color: '#f7d540' 
-                    }}>
-                        Нова реєстрація
-                    </Link>
+        <div className="home-container">
+            <section className="hero-section">
+                <div className="hero-text-content">
+                    <h1 className="hero-title">
+                        PRO <span className="gold-text">ATHLETE</span> CARE
+                    </h1>
+                    <h2 className="hero-subtitle-main">
+                        Онлайн-тренінг та професійний супровід атлетів
+                    </h2>
+                    <p className="hero-description">
+                        Професійна платформа для контролю фізичного стану, 
+                        тренувального процесу та відновлення. Отримуйте результат під наглядом експертів.
+                    </p>
+                    <div className="hero-actions">
+                        <Link to="/login" className="btn-primary">Увійти</Link>
+                        <Link to="/register" className="btn-secondary">Реєстрація</Link>
+                    </div>
                 </div>
-            </div>
+                
+                <div className="hero-image-wrapper">
+                    <img src={mainImage} alt="Professional Athlete" className="hero-athlete-img" />
+                    <div className="image-gradient-overlay"></div>
+                </div>
+            </section>
         </div>
     );
 };
