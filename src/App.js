@@ -6,9 +6,11 @@ import './styles/Global.css';
 import MainLayout from './layouts/MainLayout/MainLayout';
 import Register from './pages/Register/Register';
 import Login from './pages/Login/Login'; 
+import AboutUs from './pages/AboutUs/AboutUs';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'; 
 import HomeContent from './pages/HomeContent/HomeContent'; 
 import TrainingLog from './pages/TrainingLog/TrainingLog';
+
 
 // 2. КОМПОНЕНТИ, ЯКІ ЗАВАНТАЖУЮТЬСЯ ЛІНИВО
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
@@ -31,6 +33,7 @@ function App() {
                         <Route path="/" element={<HomeContent />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/about" element={<AboutUs />} />
 
                         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> 
                         <Route path="/wellness" element={<ProtectedRoute><WellnessControl /></ProtectedRoute>} />

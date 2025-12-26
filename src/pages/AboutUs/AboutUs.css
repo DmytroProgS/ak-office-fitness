@@ -1,0 +1,36 @@
+.about-container {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background-color: #000;
+}
+
+.about-content {
+    max-width: 800px;
+    width: 100%;
+    text-align: left;
+    border-left: 2px solid var(--primary-color);
+    padding-left: 30px;
+}
+
+.about-title {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+}
+
+.about-text-block p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.placeholder-text {
+    color: var(--primary-color) !important;
+    font-style: italic;
+    opacity: 0.7;
+}

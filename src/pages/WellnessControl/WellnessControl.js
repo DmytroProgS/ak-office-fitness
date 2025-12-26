@@ -2,206 +2,188 @@ import React, { useState } from 'react';
 import emailjs from '@emailjs/browser'; 
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'; 
 import useUserData from '../../hooks/useUserData'; 
-import { db } from '../../firebase'; 
+import { db, auth } from '../../firebase'; 
 
 import './WellnessControl.css'; 
 
-// !!! ВАШІ РЕАЛЬНІ КЛЮЧІ EMAILJS !!!
+// Ваші діючі ключі
 const EMAILJS_SERVICE_ID = 'service_m3w0lih';   
 const EMAILJS_TEMPLATE_ID = 'template_6cig964'; 
 const EMAILJS_PUBLIC_KEY = 'h4ZitYEvI_2ynZzgm'; 
 const RECIPIENT_EMAIL = 'akkfitness13@gmail.com'; 
-// ------------------------------------
 
-// ⭐ ІНІЦІАЛІЗАЦІЯ EMAILJS
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
 const WellnessControl = () => {
-    // Отримуємо дані користувача та статус завантаження
     const { userData, loading: loadingData } = useUserData();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [formData, setFormData] = useState({
-        // Дані опитувальника (шкала 1-10)
         sleepQuality: 5,         
         sportLevel: 5,           
         stressLevel: 5,          
         officeExercises: 5,      
-        
-        // Біль/дискомфорт
         hasPain: 'Ні',           
         painArea: [],            
-        painDescription: '',     
+        painDescription: ''
     });
-
-    // Список можливих зон болю
-    const painAreas = ['Шия', 'Плече', 'Верхня частина спини', 'Поперековий відділ хребта / нижня частина спини', 'Сідниці', 'Ноги', 'Стопи/гомілкостоп', 'Голова', 'Руки'];
-
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-
         if (type === 'checkbox') {
-            const newPainArea = checked
+            const updatedPainArea = checked
                 ? [...formData.painArea, value]
                 : formData.painArea.filter((area) => area !== value);
-            
-            setFormData({ ...formData, painArea: newPainArea });
-            return;
+            setFormData({ ...formData, painArea: updatedPainArea });
+        } else {
+            setFormData({ ...formData, [name]: value });
         }
-
-        setFormData({
-            ...formData,
-            [name]: name === 'sleepQuality' || name === 'sportLevel' || name === 'stressLevel' || name === 'officeExercises'
-                ? parseInt(value)
-                : value,
-        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // ⭐ КРИТИЧНИЙ ЗАХИСТ: Блокуємо відправку, якщо дані користувача не завантажено
-        if (loadingData || !userData || !userData.email || !userData.uid) {
-            alert("Будь ласка, дочекайтесь завантаження даних користувача або увійдіть знову.");
+        if (!userData) {
+            alert("Помилка: Дані користувача не завантажені.");
             return;
         }
-        
-        // --- Створення параметрів для EmailJS ---
+
+        setIsSubmitting(true);
+
         const templateParams = {
-            to_email: RECIPIENT_EMAIL, 
-            from_name: userData.firstName || userData.email?.split('@')[0] || 'Anonymous', 
-            from_email: userData.email ?? '', 
-            
+            user_name: `${userData.firstName || ''} ${userData.lastName || ''}`,
+            user_email: userData.email,
+            to_email: RECIPIENT_EMAIL,
             sleep_quality: formData.sleepQuality,
             sport_level: formData.sportLevel,
             stress_level: formData.stressLevel,
             office_exercises: formData.officeExercises,
-            
             has_pain: formData.hasPain,
-            pain_area: formData.hasPain === 'Так' && formData.painArea.length > 0 ? formData.painArea.join(', ') : 'Немає',
-            pain_description: formData.painDescription || 'Немає додаткового опису.',
-            
-            timestamp: new Date().toLocaleString('uk-UA'),
-        };
-
-        // 1. Створення об'єкта запису для Firestore
-        const wellnessRecord = {
-            ...formData, 
-            userId: userData.uid, // Потрібно для фільтрації в історії та правил безпеки
-            timestamp: serverTimestamp(), 
-            userName: userData.firstName || userData.email, 
+            pain_area: formData.painArea.join(', ') || 'Не вказано',
+            pain_description: formData.painDescription || 'Немає опису',
         };
 
         try {
-            // ⭐ 2. ВИПРАВЛЕНО: ЗБЕРЕЖЕННЯ ДАНИХ У ЗАГАЛЬНУ КОЛЕКЦІЮ (згідно з вашими правилами)
-            const recordsCollectionRef = collection(db, 'wellnessRecords');
-            await addDoc(recordsCollectionRef, wellnessRecord);
-
-            // 3. ВІДПРАВКА EMAIL
-            await emailjs.send(
-                EMAILJS_SERVICE_ID,
-                EMAILJS_TEMPLATE_ID,
-                templateParams
-            );
-            
-            alert(`✅ Опитувальник успішно надіслано та збережено!`);
-            
-            // 4. Очищення форми після успішної відправки
-            setFormData({
-                sleepQuality: 5, sportLevel: 5, stressLevel: 5, officeExercises: 5,
-                hasPain: 'Ні', painArea: [], painDescription: '',
+            // 1. Збереження в Firestore
+            await addDoc(collection(db, 'wellness'), {
+                ...formData,
+                userId: auth.currentUser.uid,
+                userName: templateParams.user_name,
+                userEmail: userData.email,
+                createdAt: serverTimestamp(),
             });
 
+            // 2. Відправка EmailJS
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+
+            alert('Опитувальник успішно надіслано!');
         } catch (error) {
-            console.error("Помилка обробки опитувальника (Firestore/EmailJS):", error);
-            alert("❌ Помилка: Звіт не надіслано або не збережено. Перевірте консоль.");
+            console.error('Помилка при відправці:', error);
+            alert('Сталася помилка. Спробуйте ще раз.');
+        } finally {
+            setIsSubmitting(false);
         }
     };
-    
-    // Компонент для слайдерів
-    const StarRatingSlider = ({ name, label }) => (
-        <div className="form-group">
-            <label htmlFor={name}>
-                {label}: 
-                <span className="rating-value">{formData[name]}</span> / 10
-            </label>
-            <input
-                type="range"
-                id={name}
-                name={name}
-                min="1"
-                max="10"
-                value={formData[name]}
-                onChange={handleChange}
-                className="slider"
-            />
-        </div>
-    );
+
+    // Функція для розрахунку статусу (динаміка для правої панелі)
+    const getStatus = (val) => {
+        const value = parseInt(val);
+        if (value <= 3) return { text: "Погано", color: "#ff4d4d" };
+        if (value <= 7) return { text: "Нормально", color: "#f7d540" };
+        return { text: "Відмінно", color: "#4caf50" };
+    };
+
+    // Середній бал для головного індикатора
+    const averageScore = ((parseInt(formData.sleepQuality) + parseInt(formData.sportLevel) + 
+                          (11 - parseInt(formData.stressLevel)) + parseInt(formData.officeExercises)) / 4).toFixed(1);
+
+    if (loadingData) return <div className="loading">Завантаження профілю...</div>;
 
     return (
-        <div className="wellness-container">
-            <h1>ЩОДЕННІ ПИТАННЯ (Wellness Control)</h1>
-            <p>Будь ласка, заповніть форму для контролю вашого самопочуття.</p>
+        <div className="wellness-page">
+            <h1 className="page-title">Велнес-контроль</h1>
             
-            <form onSubmit={handleSubmit} className="wellness-form">
-                
-                <hr className="divider" />
+            <div className="wellness-grid">
+                {/* ЛІВА ЧАСТИНА: ФОРМА */}
+                <form className="wellness-form-card" onSubmit={handleSubmit}>
+                    
+                    <div className="input-group-wellness">
+                        <label><i className="fas fa-bed"></i> Якість сну ({formData.sleepQuality}/10)</label>
+                        <input type="range" name="sleepQuality" min="1" max="10" value={formData.sleepQuality} onChange={handleChange} />
+                    </div>
 
-                <StarRatingSlider name="sleepQuality" label="Як ти спав минулої ночі? (1-10)" />
-                <StarRatingSlider name="sportLevel" label="Який у вас сьогодні рівень спорту? (1-10)" />
-                <StarRatingSlider name="stressLevel" label="Який у вас сьогодні рівень стресу? (1-10)" />
-                <StarRatingSlider name="officeExercises" label="Ви виконали сьогодні рекомендовані офісні вправи? (1-10)" />
-                
-                <hr className="divider" />
+                    <div className="input-group-wellness">
+                        <label><i className="fas fa-running"></i> Спортивна активність ({formData.sportLevel}/10)</label>
+                        <input type="range" name="sportLevel" min="1" max="10" value={formData.sportLevel} onChange={handleChange} />
+                    </div>
 
-                <div className="form-group">
-                    <label>Чи відчуваєте ви зараз якийсь біль або дискомфорт у своєму тілі?</label>
-                    <div className="radio-group">
-                        <label>
-                            <input type="radio" name="hasPain" value="Так" checked={formData.hasPain === 'Так'} onChange={handleChange} /> Так
-                        </label>
-                        <label>
-                            <input type="radio" name="hasPain" value="Ні" checked={formData.hasPain === 'Ні'} onChange={handleChange} /> Ні
-                        </label>
+                    <div className="input-group-wellness">
+                        <label><i className="fas fa-brain"></i> Рівень стресу ({formData.stressLevel}/10)</label>
+                        <input type="range" name="stressLevel" min="1" max="10" value={formData.stressLevel} onChange={handleChange} />
+                    </div>
+
+                    <div className="input-group-wellness">
+                        <label><i className="fas fa-dumbbell"></i> Офісні вправи ({formData.officeExercises}/10)</label>
+                        <input type="range" name="officeExercises" min="1" max="10" value={formData.officeExercises} onChange={handleChange} />
+                    </div>
+
+                    <div className="pain-section">
+                        <h3><i className="fas fa-exclamation-triangle"></i> Чи є дискомфорт/біль?</h3>
+                        <div className="radio-group">
+                            <label><input type="radio" name="hasPain" value="Так" checked={formData.hasPain === 'Так'} onChange={handleChange} /> Так</label>
+                            <label><input type="radio" name="hasPain" value="Ні" checked={formData.hasPain === 'Ні'} onChange={handleChange} /> Ні</label>
+                        </div>
+
+                        {formData.hasPain === 'Так' && (
+                            <div className="pain-details animate-fade">
+                                <p>Оберіть зону:</p>
+                                <div className="checkbox-grid">
+                                    {['Шия', 'Спина', 'Поперек', 'Плечі', 'Коліна', 'Кисті'].map(area => (
+                                        <label key={area} className="check-item">
+                                            <input type="checkbox" value={area} checked={formData.painArea.includes(area)} onChange={handleChange} /> {area}
+                                        </label>
+                                    ))}
+                                </div>
+                                <textarea 
+                                    name="painDescription" 
+                                    placeholder="Опишіть детальніше..." 
+                                    value={formData.painDescription} 
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        )}
+                    </div>
+
+                    <button type="submit" className="btn-save-wellness" disabled={isSubmitting}>
+                        {isSubmitting ? "Надсилаємо..." : "Зберегти та надіслати"}
+                    </button>
+                </form>
+
+                {/* ПРАВА ЧАСТИНА: ДИНАМІЧНІ ПОКАЗНИКИ */}
+                <div className="wellness-indicators">
+                    <div className="indicator-card">
+                        <span className="indicator-label">Загальний індекс</span>
+                        <div className="indicator-value" style={{color: getStatus(averageScore * 1).color}}>
+                            {averageScore}
+                        </div>
+                        <p className="indicator-desc">Ваш стан на основі опитування</p>
+                    </div>
+
+                    <div className="mini-stats">
+                        <div className="stat-box">
+                            <span className="stat-title">Сон</span>
+                            <span className="stat-val" style={{color: getStatus(formData.sleepQuality).color}}>{getStatus(formData.sleepQuality).text}</span>
+                        </div>
+                        <div className="stat-box">
+                            <span className="stat-title">Стрес</span>
+                            <span className="stat-val" style={{color: getStatus(11 - formData.stressLevel).color}}>{getStatus(11 - formData.stressLevel).text}</span>
+                        </div>
+                        <div className="stat-box">
+                            <span className="stat-title">Біль</span>
+                            <span className="stat-val">{formData.hasPain === 'Так' ? 'Присутній' : 'Відсутній'}</span>
+                        </div>
                     </div>
                 </div>
-
-                {formData.hasPain === 'Так' && (
-                    <>
-                        <div className="form-group checkbox-group">
-                            <label>Якщо так, то де саме? (Можливий вибір кількох варіантів)</label>
-                            {painAreas.map((area) => (
-                                <label key={area} className="checkbox-item">
-                                    <input 
-                                        type="checkbox" 
-                                        name="painArea" 
-                                        value={area} 
-                                        checked={formData.painArea.includes(area)} 
-                                        onChange={handleChange} 
-                                    /> 
-                                    {area}
-                                </label>
-                            ))}
-                        </div>
-                        
-                        <div className="form-group">
-                            <label htmlFor="painDescription">Додатковий опис болю:</label>
-                            <textarea
-                                id="painDescription"
-                                name="painDescription"
-                                value={formData.painDescription}
-                                onChange={handleChange}
-                                placeholder="Опишіть, як ви себе почуваєте або де саме відчуваєте біль."
-                                rows="3"
-                            ></textarea>
-                        </div>
-                    </>
-                )}
-
-                <button type="submit" className="submit-button" disabled={loadingData}>
-                    {loadingData ? 'Завантаження даних...' : 'Зберегти та надіслати опитувальник'}
-                </button>
-            </form>
+            </div>
         </div>
     );
 };

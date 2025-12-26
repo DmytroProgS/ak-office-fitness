@@ -1,0 +1,159 @@
+/* src/pages/LoadSeason/LoadSeason.css */
+
+.load-season-container {
+    padding: 20px;
+}
+
+.dashboard-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.left-column, .right-column {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-card, .stats-card, .chart-card {
+    background-color: var(--card-background);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: white;
+}
+
+/* Шкала RPE */
+.rpe-scale {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.rpe-item {
+    flex: 1;
+    text-align: center;
+}
+
+.rpe-item input {
+    display: none;
+}
+
+.rpe-label {
+    display: block;
+    padding: 8px 2px;
+    background: #222;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em;
+    transition: 0.3s;
+}
+
+.rpe-item input:checked + .rpe-label {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Gauge Chart (Спідометр) */
+.gauge-wrapper {
+    position: relative;
+    width: 280px;
+    height: 150px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+.gauge-body {
+    width: 100%;
+    height: 200%;
+    background: conic-gradient(
+        #D9534F 0deg 45deg,    /* Danger Low */
+        #F0AD4E 45deg 75deg,   /* Warning */
+        #5CB85C 75deg 105deg,  /* Safe Zone */
+        #F0AD4E 105deg 135deg, /* Warning High */
+        #D9534F 135deg 180deg, /* Danger High */
+        #222 180deg
+    );
+    border-radius: 50%;
+    mask: radial-gradient(circle at 50% 50%, transparent 65%, black 66%);
+    -webkit-mask: radial-gradient(circle at 50% 50%, transparent 65%, black 66%);
+    transform: rotate(-90deg);
+}
+
+.gauge-needle-pivot {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: #FFD700;
+    border-radius: 50%;
+    transform: translate(-50%, 50%);
+    z-index: 10;
+}
+
+.gauge-needle {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    height: 120px;
+    background: #FFD700;
+    transform-origin: bottom center;
+    transition: transform 1.5s ease-out;
+    border-radius: 3px;
+    transform: translateX(-50%) rotate(0deg);
+}
+
+.gauge-value-text {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+#acwr-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #FFD700;
+}
+
+.status-safe { color: #5CB85C; }
+.status-warning { color: #F0AD4E; }
+.status-danger { color: #D9534F; }
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}

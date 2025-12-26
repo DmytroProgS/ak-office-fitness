@@ -1,14 +1,14 @@
 /* src/styles/Global.css (Або додайте до index.css) */
 
 /* Змінні кольорів (Визначено за цільовим дизайном) */
+/* src/styles/Global.css */
 :root {
-    --primary-color: #f7d540;      /* Золотий */
-    --secondary-color: #000000;    /* Чистий чорний для фону */
-    --card-background: #111111;    /* Темно-сірий для карток/сайбару */
-    --text-color: #ffffff;         /* Білий текст */
-    --text-muted: #aaaaaa;         /* Приглушений текст */
-    --border-radius: 0px;          /* На макеті все досить гостре, або мінімальне закруглення */
-    --padding-card: 20px;
+    --primary-color: #f7d540;      /* Золотий/Помаранчевий */
+    --secondary-color: #000000;    /* Чистий чорний фон */
+    --card-background: #111111;    /* Темно-сірий для карток та сайдбару */
+    --text-color: #ffffff;
+    --text-muted: #aaaaaa;
+    --border-radius: 8px;          /* Більш строгі кути як на зразку */
 }
 
 

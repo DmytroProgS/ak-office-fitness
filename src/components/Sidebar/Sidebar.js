@@ -1,33 +1,38 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
+import menuIcon from '../../assets/images/AK_logo.png'; // Логотип для іконок
 
 const Sidebar = () => {
     const location = useLocation();
     const isActive = (path) => location.pathname === path;
 
-    const navItems = [
-        { path: '/dashboard', label: 'Панель управління' },
-        { path: '/wellness', label: 'Велнес-контроль' },
-        { path: '/injury', label: 'Історія травм' },
+    const menuItems = [
+        { path: '/wellness', label: 'Wellness Control' },
+        { path: '/injury', label: 'Injury Story' },
+        { path: '/load', label: 'Load Season' },
+        { path: '/daily', label: 'Щоденна індивідуальна' },
+        { path: '/weekly', label: 'Щотижнева індивідуальна' },
+        { path: '/weight', label: 'Контроль ваги' },
         { path: '/training', label: 'Щоденник тренувань' },
-        { path: '/weight', label: 'Контроль ваги' }
+        { path: '/velocity', label: 'Контроль швидкості' }
     ];
 
     return (
-        <aside className="sidebar">
-            <nav className="nav-menu">
-                {navItems.map(item => (
+        <nav className="sidebar">
+            <div className="sidebar-links">
+                {menuItems.map((item) => (
                     <Link 
-                        key={item.path} 
+                        key={item.path}
                         to={item.path} 
-                        className={`nav-item ${isActive(item.path) ? 'active' : ''}`}
+                        className={isActive(item.path) ? 'active' : ''}
                     >
                         {item.label}
+                        <img src={menuIcon} className="menu-icon" alt="АК" />
                     </Link>
                 ))}
-            </nav>
-        </aside>
+            </div>
+        </nav>
     );
 };
 
