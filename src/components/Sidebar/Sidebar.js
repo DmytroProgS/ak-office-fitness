@@ -13,8 +13,8 @@ const Sidebar = () => {
         { path: '/load', label: 'Load Season' },
         { path: '/daily', label: 'Щоденна індивідуальна' },
         { path: '/weekly', label: 'Щотижнева індивідуальна' },
-        { path: '/weight', label: 'Контроль ваги' },
-        { path: '/training', label: 'Щоденник тренувань' },
+        { path: '/weight', label: 'Weight Control' },
+        { path: '/training', label: 'Control Training' },
         { path: '/velocity', label: 'Контроль швидкості' }
     ];
 

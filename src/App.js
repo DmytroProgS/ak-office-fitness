@@ -11,6 +11,8 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import HomeContent from './pages/HomeContent/HomeContent'; 
 import TrainingLog from './pages/TrainingLog/TrainingLog';
 
+// ІМПОРТ ВАШОЇ ЗАГЛУШКИ
+import PasswordProtect from './components/PasswordProtect/PasswordProtect'; // Перевірте шлях до файлу
 
 // 2. КОМПОНЕНТИ, ЯКІ ЗАВАНТАЖУЮТЬСЯ ЛІНИВО
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
@@ -27,28 +29,31 @@ const Profile = lazy(() => import('./pages/Profile/Profile'));
 function App() {
     return (
         <HashRouter>
-            <MainLayout>
-                <Suspense fallback={<div className="loading-screen">Завантаження сторінки...</div>}>
-                    <Routes>
-                        <Route path="/" element={<HomeContent />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/about" element={<AboutUs />} />
+            {/* Огортаємо весь сайт у захист паролем */}
+            <PasswordProtect>
+                <MainLayout>
+                    <Suspense fallback={<div className="loading-screen">Завантаження сторінки...</div>}>
+                        <Routes>
+                            <Route path="/" element={<HomeContent />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/about" element={<AboutUs />} />
 
-                        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> 
-                        <Route path="/wellness" element={<ProtectedRoute><WellnessControl /></ProtectedRoute>} />
-                        <Route path="/injury" element={<ProtectedRoute><InjuryStory /></ProtectedRoute>} />
-                        <Route path="/load" element={<ProtectedRoute><LoadSeason /></ProtectedRoute>} />
-                        <Route path="/daily" element={<ProtectedRoute><DailyIndividual /></ProtectedRoute>} />
-                        <Route path="/weekly" element={<ProtectedRoute><WeeklyIndividual /></ProtectedRoute>} />
-                        <Route path="/weight" element={<ProtectedRoute><WeightControl /></ProtectedRoute>} />
-                        <Route path="/velocity" element={<ProtectedRoute><VelocityControl /></ProtectedRoute>} />
-                        <Route path="/training" element={<ProtectedRoute><TrainingLog /></ProtectedRoute>} />
-                        <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
-                        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                    </Routes>
-                </Suspense>
-            </MainLayout>
+                            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} /> 
+                            <Route path="/wellness" element={<ProtectedRoute><WellnessControl /></ProtectedRoute>} />
+                            <Route path="/injury" element={<ProtectedRoute><InjuryStory /></ProtectedRoute>} />
+                            <Route path="/load" element={<ProtectedRoute><LoadSeason /></ProtectedRoute>} />
+                            <Route path="/daily" element={<ProtectedRoute><DailyIndividual /></ProtectedRoute>} />
+                            <Route path="/weekly" element={<ProtectedRoute><WeeklyIndividual /></ProtectedRoute>} />
+                            <Route path="/weight" element={<ProtectedRoute><WeightControl /></ProtectedRoute>} />
+                            <Route path="/velocity" element={<ProtectedRoute><VelocityControl /></ProtectedRoute>} />
+                            <Route path="/training" element={<ProtectedRoute><TrainingLog /></ProtectedRoute>} />
+                            <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+                            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                        </Routes>
+                    </Suspense>
+                </MainLayout>
+            </PasswordProtect>
         </HashRouter>
     );
 }
